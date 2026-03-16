@@ -1,0 +1,1239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PathFinder — Your Career Running Start</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0A1628;
+    --navy2: #0F2040;
+    --blue: #1A3A6E;
+    --blue2: #1E4D8C;
+    --accent: #F5A623;
+    --accent2: #FFBE44;
+    --teal: #00C9A7;
+    --white: #F8F9FC;
+    --gray: #8898AA;
+    --lightgray: #E8EDF5;
+    --card: rgba(255,255,255,0.05);
+    --border: rgba(255,255,255,0.1);
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--navy);
+    color: var(--white);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ---- NAV ---- */
+  nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 2.5rem;
+    height: 68px;
+    background: rgba(10,22,40,0.95);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    position: sticky; top: 0; z-index: 100;
+  }
+  .logo {
+    display: flex; align-items: center; gap: 10px;
+    font-family: 'Syne', sans-serif;
+    font-size: 1.35rem; font-weight: 800;
+    letter-spacing: -0.5px;
+  }
+  .logo-icon {
+    width: 34px; height: 34px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem; font-weight: 900; color: var(--navy);
+  }
+  .logo span { color: var(--accent); }
+  nav ul { display: flex; list-style: none; gap: 0.25rem; }
+  nav ul li a {
+    padding: 0.45rem 0.9rem;
+    border-radius: 8px;
+    font-size: 0.88rem; font-weight: 500;
+    color: var(--gray);
+    text-decoration: none;
+    transition: all 0.2s;
+    cursor: pointer;
+  }
+  nav ul li a:hover, nav ul li a.active { color: var(--white); background: var(--card); }
+  .nav-cta {
+    background: linear-gradient(135deg, var(--accent), var(--accent2)) !important;
+    color: var(--navy) !important;
+    font-weight: 700 !important;
+    padding: 0.45rem 1.1rem !important;
+  }
+  .nav-cta:hover { opacity: 0.9; transform: translateY(-1px); }
+
+  /* ---- HERO ---- */
+  .hero {
+    padding: 5rem 2.5rem 4rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 50% -10%, rgba(26,58,110,0.7), transparent);
+    pointer-events: none;
+  }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(245,166,35,0.15);
+    border: 1px solid rgba(245,166,35,0.4);
+    color: var(--accent);
+    font-size: 0.8rem; font-weight: 600;
+    padding: 0.35rem 1rem; border-radius: 999px;
+    margin-bottom: 1.5rem;
+    letter-spacing: 0.5px; text-transform: uppercase;
+  }
+  .hero h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    font-weight: 800;
+    line-height: 1.08;
+    letter-spacing: -1.5px;
+    margin-bottom: 1.2rem;
+  }
+  .hero h1 em { color: var(--accent); font-style: normal; }
+  .hero p {
+    font-size: 1.1rem; color: var(--gray);
+    max-width: 560px; margin: 0 auto 2.5rem;
+    line-height: 1.7;
+  }
+  .hero-stats {
+    display: flex; justify-content: center; gap: 3rem; flex-wrap: wrap;
+    margin-bottom: 3rem;
+  }
+  .hero-stat { text-align: center; }
+  .hero-stat .num {
+    font-family: 'Syne', sans-serif;
+    font-size: 2.2rem; font-weight: 800; color: var(--accent);
+    line-height: 1;
+  }
+  .hero-stat .label { font-size: 0.78rem; color: var(--gray); margin-top: 4px; letter-spacing: 0.5px; }
+  .hero-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+  .btn-primary {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: var(--navy);
+    padding: 0.85rem 2rem;
+    border-radius: 10px;
+    font-weight: 700; font-size: 0.95rem;
+    border: none; cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(245,166,35,0.3); }
+  .btn-secondary {
+    background: transparent;
+    color: var(--white);
+    padding: 0.85rem 2rem;
+    border-radius: 10px;
+    font-weight: 600; font-size: 0.95rem;
+    border: 1px solid var(--border);
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .btn-secondary:hover { background: var(--card); }
+
+  /* ---- SECTIONS ---- */
+  section { padding: 4rem 2.5rem; max-width: 1200px; margin: 0 auto; }
+  .section-label {
+    font-size: 0.75rem; font-weight: 700;
+    color: var(--teal); letter-spacing: 2px; text-transform: uppercase;
+    margin-bottom: 0.6rem;
+  }
+  .section-title {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+    font-weight: 800; letter-spacing: -0.5px;
+    margin-bottom: 0.75rem;
+  }
+  .section-sub { color: var(--gray); font-size: 1rem; line-height: 1.6; max-width: 600px; }
+
+  /* ---- PIPELINE ---- */
+  .pipeline {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem; margin-top: 3rem;
+  }
+  .pipeline-step {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 2rem;
+    position: relative;
+    transition: all 0.3s;
+  }
+  .pipeline-step:hover { border-color: rgba(245,166,35,0.4); transform: translateY(-4px); }
+  .step-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 3rem; font-weight: 800;
+    color: rgba(245,166,35,0.15);
+    line-height: 1; margin-bottom: 1rem;
+  }
+  .step-icon { font-size: 1.8rem; margin-bottom: 0.75rem; }
+  .step-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.2rem; font-weight: 700; margin-bottom: 0.5rem; color: var(--accent);
+  }
+  .step-desc { font-size: 0.9rem; color: var(--gray); line-height: 1.6; }
+  .step-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 1rem; }
+  .tag {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid var(--border);
+    font-size: 0.72rem; padding: 3px 10px;
+    border-radius: 999px; color: var(--gray);
+  }
+
+  /* ---- AI ADVISOR ---- */
+  .ai-section { background: var(--navy2); border-radius: 20px; padding: 3rem; margin-top: 2rem; }
+  .ai-header { display: flex; align-items: center; gap: 12px; margin-bottom: 0.5rem; }
+  .ai-dot {
+    width: 10px; height: 10px; background: var(--teal);
+    border-radius: 50%; animation: pulse 2s infinite;
+  }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(1.3)} }
+  .ai-badge {
+    background: rgba(0,201,167,0.15); border: 1px solid rgba(0,201,167,0.3);
+    color: var(--teal); font-size: 0.72rem; font-weight: 700;
+    padding: 3px 10px; border-radius: 999px; letter-spacing: 1px; text-transform: uppercase;
+  }
+  .ai-chat { display: flex; flex-direction: column; gap: 1rem; margin-top: 2rem; }
+  .chat-input-row { display: flex; gap: 0.75rem; }
+  .chat-input {
+    flex: 1;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 0.9rem 1.2rem;
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .chat-input:focus { border-color: rgba(245,166,35,0.5); }
+  .chat-input::placeholder { color: var(--gray); }
+  .chat-send {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: var(--navy);
+    border: none; border-radius: 12px;
+    padding: 0.9rem 1.4rem;
+    font-weight: 700; cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .chat-send:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(245,166,35,0.3); }
+  .chat-send:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+  .chat-messages { display: flex; flex-direction: column; gap: 1rem; min-height: 80px; }
+  .msg {
+    padding: 1rem 1.2rem;
+    border-radius: 12px;
+    font-size: 0.92rem;
+    line-height: 1.65;
+    animation: fadeUp 0.3s ease;
+  }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:none} }
+  .msg-user {
+    background: rgba(245,166,35,0.12);
+    border: 1px solid rgba(245,166,35,0.2);
+    color: var(--white);
+    align-self: flex-end;
+    max-width: 80%;
+  }
+  .msg-ai {
+    background: rgba(0,201,167,0.08);
+    border: 1px solid rgba(0,201,167,0.2);
+    color: var(--white);
+    align-self: flex-start;
+    max-width: 90%;
+  }
+  .msg-ai strong { color: var(--teal); }
+  .quick-prompts { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.5rem; }
+  .quick-btn {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border);
+    color: var(--gray);
+    padding: 0.45rem 0.9rem;
+    border-radius: 999px;
+    font-size: 0.8rem; cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .quick-btn:hover { background: rgba(245,166,35,0.12); border-color: rgba(245,166,35,0.3); color: var(--accent); }
+
+  /* ---- TRACKS ---- */
+  .tracks-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; margin-top: 2.5rem; }
+  .track-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px; padding: 1.75rem;
+    cursor: pointer; transition: all 0.25s;
+    position: relative; overflow: hidden;
+  }
+  .track-card::before {
+    content: ''; position: absolute;
+    top: 0; left: 0; right: 0; height: 3px;
+    opacity: 0; transition: opacity 0.2s;
+  }
+  .track-card:hover { transform: translateY(-3px); border-color: rgba(245,166,35,0.4); }
+  .track-card:hover::before { opacity: 1; }
+  .tc-finance::before { background: linear-gradient(90deg,#F5A623,#FFBE44); }
+  .tc-marketing::before { background: linear-gradient(90deg,#667eea,#764ba2); }
+  .tc-tax::before { background: linear-gradient(90deg,#00C9A7,#00B0FF); }
+  .tc-web::before { background: linear-gradient(90deg,#f857a6,#ff5858); }
+  .tc-speaking::before { background: linear-gradient(90deg,#4facfe,#00f2fe); }
+  .tc-service::before { background: linear-gradient(90deg,#43e97b,#38f9d7); }
+  .track-icon { font-size: 2rem; margin-bottom: 0.75rem; }
+  .track-name {
+    font-family: 'Syne', sans-serif;
+    font-size: 1rem; font-weight: 700; margin-bottom: 0.4rem;
+  }
+  .track-cert {
+    font-size: 0.75rem; color: var(--teal);
+    margin-bottom: 0.75rem;
+    background: rgba(0,201,167,0.1);
+    border: 1px solid rgba(0,201,167,0.2);
+    padding: 3px 10px; border-radius: 999px;
+    display: inline-block;
+  }
+  .track-desc { font-size: 0.82rem; color: var(--gray); line-height: 1.5; margin-bottom: 1rem; }
+  .track-modules { font-size: 0.75rem; color: var(--gray); display: flex; flex-wrap: wrap; gap: 5px; }
+  .track-modules span {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border);
+    padding: 2px 8px; border-radius: 5px;
+  }
+  .enrolled-badge {
+    display: none;
+    position: absolute; top: 1rem; right: 1rem;
+    background: var(--teal); color: var(--navy);
+    font-size: 0.65rem; font-weight: 700;
+    padding: 3px 8px; border-radius: 999px;
+  }
+  .track-card.enrolled .enrolled-badge { display: block; }
+  .track-enroll {
+    margin-top: 1rem;
+    width: 100%;
+    background: rgba(245,166,35,0.12);
+    border: 1px solid rgba(245,166,35,0.3);
+    color: var(--accent);
+    padding: 0.55rem;
+    border-radius: 8px;
+    font-size: 0.82rem; font-weight: 600;
+    cursor: pointer; transition: all 0.2s;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .track-enroll:hover { background: rgba(245,166,35,0.22); }
+
+  /* ---- PROGRESS TRACKER ---- */
+  .progress-section {
+    background: var(--navy2);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 2.5rem;
+    margin-top: 2rem;
+  }
+  .progress-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem; }
+  .xp-bar-wrap { margin-bottom: 2rem; }
+  .xp-label { display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--gray); margin-bottom: 6px; }
+  .xp-bar { height: 8px; background: rgba(255,255,255,0.08); border-radius: 999px; overflow: hidden; }
+  .xp-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--teal), var(--accent));
+    border-radius: 999px;
+    transition: width 0.6s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  .progress-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+  .progress-module {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    border-radius: 12px; padding: 1.25rem;
+    transition: all 0.2s;
+  }
+  .progress-module.done { border-color: rgba(0,201,167,0.4); background: rgba(0,201,167,0.06); }
+  .pm-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem; }
+  .pm-icon { font-size: 1.2rem; }
+  .pm-check {
+    width: 20px; height: 20px;
+    border: 2px solid var(--border);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.65rem; cursor: pointer;
+    transition: all 0.2s;
+  }
+  .progress-module.done .pm-check { background: var(--teal); border-color: var(--teal); color: var(--navy); }
+  .pm-name { font-size: 0.85rem; font-weight: 600; margin-bottom: 3px; }
+  .pm-sub { font-size: 0.73rem; color: var(--gray); }
+  .pm-xp { font-size: 0.7rem; color: var(--accent); margin-top: 0.5rem; font-weight: 600; }
+  .stats-row { display: flex; gap: 1.5rem; flex-wrap: wrap; }
+  .stat-pill {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border);
+    border-radius: 10px; padding: 0.75rem 1.25rem;
+    text-align: center;
+  }
+  .stat-pill .n { font-family: 'Syne', sans-serif; font-size: 1.5rem; font-weight: 800; color: var(--accent); }
+  .stat-pill .l { font-size: 0.7rem; color: var(--gray); margin-top: 2px; }
+
+  /* ---- INTERNSHIP PORTAL ---- */
+  .portal-filters { display: flex; gap: 0.5rem; flex-wrap: wrap; margin: 2rem 0 1.5rem; }
+  .filter-btn {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border);
+    color: var(--gray); padding: 0.45rem 1rem;
+    border-radius: 999px; font-size: 0.82rem; cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .filter-btn.active, .filter-btn:hover {
+    background: rgba(245,166,35,0.15);
+    border-color: rgba(245,166,35,0.4);
+    color: var(--accent);
+  }
+  .internship-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.25rem; }
+  .internship-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px; padding: 1.75rem;
+    transition: all 0.25s;
+  }
+  .internship-card:hover { border-color: rgba(245,166,35,0.3); transform: translateY(-2px); }
+  .ic-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 1rem; }
+  .ic-company { display: flex; align-items: center; gap: 10px; }
+  .ic-logo {
+    width: 42px; height: 42px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.2rem; font-weight: 800;
+    font-family: 'Syne', sans-serif;
+  }
+  .ic-name { font-weight: 700; font-size: 0.95rem; }
+  .ic-location { font-size: 0.75rem; color: var(--gray); }
+  .ic-track-badge {
+    font-size: 0.7rem; font-weight: 600;
+    padding: 4px 10px; border-radius: 999px;
+    white-space: nowrap;
+  }
+  .ic-role { font-family: 'Syne', sans-serif; font-size: 1.05rem; font-weight: 700; margin-bottom: 0.5rem; }
+  .ic-desc { font-size: 0.83rem; color: var(--gray); line-height: 1.55; margin-bottom: 1rem; }
+  .ic-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 1.25rem; }
+  .ic-tag { background: rgba(255,255,255,0.05); border: 1px solid var(--border); font-size: 0.7rem; padding: 2px 8px; border-radius: 5px; color: var(--gray); }
+  .ic-footer { display: flex; align-items: center; justify-content: space-between; }
+  .ic-stipend { font-size: 0.82rem; color: var(--teal); font-weight: 600; }
+  .ic-apply {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: var(--navy); border: none;
+    padding: 0.5rem 1.1rem; border-radius: 8px;
+    font-weight: 700; font-size: 0.82rem; cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    transition: all 0.2s;
+  }
+  .ic-apply:hover { transform: translateY(-1px); box-shadow: 0 4px 14px rgba(245,166,35,0.3); }
+  .ic-applied { background: var(--teal) !important; color: var(--navy) !important; }
+
+  /* ---- FINANCIAL TOOLS ---- */
+  .tools-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 2.5rem; }
+  .tool-card {
+    background: var(--navy2);
+    border: 1px solid var(--border);
+    border-radius: 18px; padding: 2rem;
+  }
+  .tool-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.15rem; font-weight: 700; margin-bottom: 0.25rem;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .tool-sub { font-size: 0.82rem; color: var(--gray); margin-bottom: 1.5rem; }
+  .input-group { margin-bottom: 1rem; }
+  .input-label { font-size: 0.78rem; color: var(--gray); margin-bottom: 5px; font-weight: 500; }
+  .tool-input {
+    width: 100%;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 0.7rem 1rem;
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .tool-input:focus { border-color: rgba(245,166,35,0.5); }
+  .tool-input[type=range] {
+    padding: 0; height: 6px;
+    background: rgba(255,255,255,0.08);
+    cursor: pointer;
+    -webkit-appearance: none;
+    border: none;
+    border-radius: 999px;
+  }
+  .tool-input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 18px; height: 18px;
+    background: var(--accent);
+    border-radius: 50%; cursor: pointer;
+  }
+  .range-value { text-align: right; font-size: 0.85rem; color: var(--accent); font-weight: 600; margin-top: 3px; }
+  .tool-result {
+    background: rgba(0,201,167,0.08);
+    border: 1px solid rgba(0,201,167,0.2);
+    border-radius: 12px; padding: 1.25rem;
+    margin-top: 1.25rem; text-align: center;
+  }
+  .result-label { font-size: 0.72rem; color: var(--gray); text-transform: uppercase; letter-spacing: 1px; }
+  .result-value {
+    font-family: 'Syne', sans-serif;
+    font-size: 2rem; font-weight: 800; color: var(--teal);
+    margin: 4px 0;
+  }
+  .result-sub { font-size: 0.78rem; color: var(--gray); }
+  /* budget bars */
+  .budget-category { margin-bottom: 0.75rem; }
+  .budget-cat-header { display: flex; justify-content: space-between; font-size: 0.8rem; margin-bottom: 4px; }
+  .budget-bar { height: 8px; background: rgba(255,255,255,0.07); border-radius: 999px; overflow: hidden; }
+  .budget-fill { height: 100%; border-radius: 999px; transition: width 0.4s; }
+  .budget-summary {
+    display: flex; justify-content: space-between;
+    font-size: 0.82rem; margin-top: 1rem;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border);
+    padding: 0.75rem 1rem; border-radius: 10px;
+  }
+  .budget-left { color: var(--teal); font-weight: 600; }
+  .budget-over { color: #FF6B6B; font-weight: 600; }
+
+  /* ---- FOOTER ---- */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 2.5rem;
+    text-align: center;
+    color: var(--gray);
+    font-size: 0.83rem;
+  }
+  footer .footer-logo { font-family: 'Syne', sans-serif; font-size: 1.1rem; font-weight: 800; color: var(--white); margin-bottom: 0.5rem; }
+  footer span { color: var(--accent); }
+
+  /* ---- MODALS / TOAST ---- */
+  .toast {
+    position: fixed; bottom: 2rem; right: 2rem;
+    background: var(--teal); color: var(--navy);
+    padding: 0.8rem 1.4rem; border-radius: 10px;
+    font-weight: 700; font-size: 0.88rem;
+    z-index: 999; transform: translateY(80px);
+    transition: transform 0.3s;
+  }
+  .toast.show { transform: translateY(0); }
+
+  /* ---- PAGE ROUTING ---- */
+  .page { display: none; }
+  .page.active { display: block; }
+
+  @media (max-width: 768px) {
+    .pipeline { grid-template-columns: 1fr; }
+    .tracks-grid { grid-template-columns: 1fr 1fr; }
+    .internship-grid { grid-template-columns: 1fr; }
+    .tools-grid { grid-template-columns: 1fr; }
+    .progress-grid { grid-template-columns: 1fr 1fr; }
+    nav ul { display: none; }
+    .hero { padding: 3rem 1.5rem; }
+    section { padding: 2.5rem 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">
+    <div class="logo-icon">PF</div>
+    Path<span>Finder</span>
+  </div>
+  <ul>
+    <li><a href="#" onclick="showPage('home')" class="active" id="nav-home">Home</a></li>
+    <li><a href="#" onclick="showPage('advisor')" id="nav-advisor">AI Advisor</a></li>
+    <li><a href="#" onclick="showPage('tracks')" id="nav-tracks">Tracks</a></li>
+    <li><a href="#" onclick="showPage('portal')" id="nav-portal">Internships</a></li>
+    <li><a href="#" onclick="showPage('tools')" id="nav-tools">Finance Tools</a></li>
+    <li><a href="#" onclick="showPage('progress')" id="nav-progress">My Progress</a></li>
+    <li><a href="#" class="nav-cta">Get Started — $199</a></li>
+  </ul>
+</nav>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- ==================== HOME ==================== -->
+<div class="page active" id="page-home">
+  <div class="hero">
+    <div class="hero-badge">🏆 2nd Place — Ashland University · Top 3 of 120 — ThinkBIG</div>
+    <h1>Every Teen Deserves<br>a <em>Running Start</em></h1>
+    <p>PathFinder is the only program that combines real-world skills training, industry certifications, and guaranteed internship placement — all in one $199 pipeline.</p>
+    <div class="hero-stats">
+      <div class="hero-stat"><div class="num">79%</div><div class="label">of teens want internships</div></div>
+      <div class="hero-stat"><div class="num">34%</div><div class="label">can actually find one</div></div>
+      <div class="hero-stat"><div class="num">$199</div><div class="label">all-in — less than SAT prep</div></div>
+      <div class="hero-stat"><div class="num">52%</div><div class="label">gross margin</div></div>
+    </div>
+    <div class="hero-buttons">
+      <button class="btn-primary" onclick="showPage('advisor')">🤖 Try AI Career Advisor</button>
+      <button class="btn-secondary" onclick="showPage('tracks')">Explore Tracks →</button>
+    </div>
+  </div>
+
+  <section>
+    <div class="section-label">How It Works</div>
+    <div class="section-title">The PathFinder Pipeline</div>
+    <div class="section-sub">Three integrated steps — not three separate programs. Every skill you learn earns a certification. Every certification unlocks a matched internship.</div>
+    <div class="pipeline">
+      <div class="pipeline-step">
+        <div class="step-num">01</div>
+        <div class="step-icon">📚</div>
+        <div class="step-title">LEARN</div>
+        <div class="step-desc">Project-based skill tracks taught by real industry professionals — CPAs, marketing directors, and entrepreneurs.</div>
+        <div class="step-tags">
+          <span class="tag">Finance</span><span class="tag">Marketing</span>
+          <span class="tag">Tax Accounting</span><span class="tag">Web Design</span>
+          <span class="tag">Public Speaking</span><span class="tag">Customer Service</span>
+        </div>
+      </div>
+      <div class="pipeline-step">
+        <div class="step-num">02</div>
+        <div class="step-icon">🎖️</div>
+        <div class="step-title">CERTIFY</div>
+        <div class="step-desc">Earn industry-recognized credentials designed with CPAs, marketing directors, and tech professionals.</div>
+        <div class="step-tags">
+          <span class="tag">Resume-Ready</span><span class="tag">Industry-Backed</span><span class="tag">Verifiable</span>
+        </div>
+      </div>
+      <div class="pipeline-step">
+        <div class="step-num">03</div>
+        <div class="step-icon">🚀</div>
+        <div class="step-title">CONNECT</div>
+        <div class="step-desc">Skills-based matching with real Northeast Ohio employers actively seeking trained interns — for free to join.</div>
+        <div class="step-tags">
+          <span class="tag">O'Neill Healthcare</span><span class="tag">Paladin Protective</span><span class="tag">Strang Klubnik</span>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ==================== AI ADVISOR ==================== -->
+<div class="page" id="page-advisor">
+  <section style="max-width:800px">
+    <div class="section-label">Powered by Claude AI</div>
+    <div class="section-title">Your Personal Career Advisor</div>
+    <div class="section-sub">Tell the advisor your interests, goals, or a job you want — and get a personalized PathFinder roadmap instantly.</div>
+
+    <div class="ai-section">
+      <div class="ai-header">
+        <div class="ai-dot"></div>
+        <div class="ai-badge">AI Advisor · Online</div>
+      </div>
+      <p style="font-size:0.85rem;color:var(--gray);margin-top:0.5rem;">Ask anything about your career path, which track to choose, or what skills employers actually want.</p>
+
+      <div class="ai-chat">
+        <div class="chat-messages" id="chatMessages">
+          <div class="msg msg-ai">
+            👋 Hey! I'm PathFinder's AI Career Advisor. Tell me about yourself — what kind of work excites you, or what career you're dreaming about — and I'll map out your perfect PathFinder journey with the right skill tracks, certifications, and internship partners to get you there.
+          </div>
+        </div>
+        <div class="quick-prompts">
+          <button class="quick-btn" onclick="sendQuick('I love working with numbers and money. What track is right for me?')">💰 I love working with numbers</button>
+          <button class="quick-btn" onclick="sendQuick('I want to learn how to build websites and apps. Where do I start?')">💻 I want to build websites</button>
+          <button class="quick-btn" onclick="sendQuick('I am great at talking to people and want to work in sales or marketing.')">📣 I am great with people</button>
+          <button class="quick-btn" onclick="sendQuick('What internship partners does PathFinder have in Northeast Ohio?')">🗺️ Show me NE Ohio partners</button>
+          <button class="quick-btn" onclick="sendQuick('How does PathFinder help me build wealth and financial independence?')">📈 Financial independence</button>
+        </div>
+        <div class="chat-input-row">
+          <input class="chat-input" id="chatInput" type="text" placeholder="Tell me your career goals or interests..." onkeydown="if(event.key==='Enter')sendChat()">
+          <button class="chat-send" id="chatSend" onclick="sendChat()">Ask AI →</button>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ==================== TRACKS ==================== -->
+<div class="page" id="page-tracks">
+  <section>
+    <div class="section-label">Skill Tracks & Certifications</div>
+    <div class="section-title">Choose Your Path</div>
+    <div class="section-sub">Six industry-designed tracks taught by real professionals. Complete a track, earn a certification, unlock matched internships. Click "Enroll" to add to your profile.</div>
+    <div class="tracks-grid" id="tracksGrid">
+
+      <div class="track-card tc-finance" data-track="finance">
+        <span class="enrolled-badge">✓ Enrolled</span>
+        <div class="track-icon">💼</div>
+        <div class="track-name">Finance & Investment</div>
+        <div class="track-cert">PathFinder Finance Certification</div>
+        <div class="track-desc">Learn budgeting, investing, portfolio building, and the principles that drive real financial decisions at small businesses and firms.</div>
+        <div class="track-modules">
+          <span>Budgeting Basics</span><span>Stock Fundamentals</span>
+          <span>Compound Interest</span><span>Financial Statements</span><span>Investment Strategy</span>
+        </div>
+        <button class="track-enroll" onclick="enrollTrack(this,'finance')">+ Enroll in This Track</button>
+      </div>
+
+      <div class="track-card tc-marketing" data-track="marketing">
+        <span class="enrolled-badge">✓ Enrolled</span>
+        <div class="track-icon">📣</div>
+        <div class="track-name">Digital Marketing</div>
+        <div class="track-cert">PathFinder Marketing Certification</div>
+        <div class="track-desc">Master social media strategy, content creation, SEO basics, and analytics — the skills every business needs right now.</div>
+        <div class="track-modules">
+          <span>Social Media Strategy</span><span>Content Creation</span>
+          <span>SEO Basics</span><span>Google Analytics</span><span>Email Campaigns</span>
+        </div>
+        <button class="track-enroll" onclick="enrollTrack(this,'marketing')">+ Enroll in This Track</button>
+      </div>
+
+      <div class="track-card tc-tax" data-track="tax">
+        <span class="enrolled-badge">✓ Enrolled</span>
+        <div class="track-icon">📊</div>
+        <div class="track-name">Tax & Accounting</div>
+        <div class="track-cert">PathFinder Accounting Certification</div>
+        <div class="track-desc">Understand taxes, bookkeeping, and financial reporting — skills taught by real CPAs from Strang Klubnik & Associates.</div>
+        <div class="track-modules">
+          <span>Tax Basics</span><span>Bookkeeping</span>
+          <span>Payroll</span><span>Financial Statements</span><span>QuickBooks Intro</span>
+        </div>
+        <button class="track-enroll" onclick="enrollTrack(this,'tax')">+ Enroll in This Track</button>
+      </div>
+
+      <div class="track-card tc-web" data-track="web">
+        <span class="enrolled-badge">✓ Enrolled</span>
+        <div class="track-icon">🌐</div>
+        <div class="track-name">Web Design & Development</div>
+        <div class="track-cert">PathFinder Tech Certification</div>
+        <div class="track-desc">Build real websites from scratch — HTML, CSS, basic JavaScript, and how to deliver client projects professionally.</div>
+        <div class="track-modules">
+          <span>HTML/CSS</span><span>JavaScript Basics</span>
+          <span>UI Design Principles</span><span>Client Projects</span><span>Portfolio Build</span>
+        </div>
+        <button class="track-enroll" onclick="enrollTrack(this,'web')">+ Enroll in This Track</button>
+      </div>
+
+      <div class="track-card tc-speaking" data-track="speaking">
+        <span class="enrolled-badge">✓ Enrolled</span>
+        <div class="track-icon">🎤</div>
+        <div class="track-name">Public Speaking & Leadership</div>
+        <div class="track-cert">PathFinder Leadership Certification</div>
+        <div class="track-desc">Develop the #1 skill employers say graduates lack — confident communication, presentation, and professional presence.</div>
+        <div class="track-modules">
+          <span>Presentation Skills</span><span>Pitch Decks</span>
+          <span>Active Listening</span><span>Team Leadership</span><span>Interview Prep</span>
+        </div>
+        <button class="track-enroll" onclick="enrollTrack(this,'speaking')">+ Enroll in This Track</button>
+      </div>
+
+      <div class="track-card tc-service" data-track="service">
+        <span class="enrolled-badge">✓ Enrolled</span>
+        <div class="track-icon">🤝</div>
+        <div class="track-name">Customer Service & Sales</div>
+        <div class="track-cert">PathFinder Sales Certification</div>
+        <div class="track-desc">Master relationship building, handling objections, CRM basics, and the soft skills that make every role better.</div>
+        <div class="track-modules">
+          <span>CRM Basics</span><span>Objection Handling</span>
+          <span>Active Listening</span><span>Sales Funnels</span><span>Client Retention</span>
+        </div>
+        <button class="track-enroll" onclick="enrollTrack(this,'service')">+ Enroll in This Track</button>
+      </div>
+
+    </div>
+  </section>
+</div>
+
+<!-- ==================== INTERNSHIP PORTAL ==================== -->
+<div class="page" id="page-portal">
+  <section>
+    <div class="section-label">Northeast Ohio Internship Portal</div>
+    <div class="section-title">Matched to Your Skills</div>
+    <div class="section-sub">Real local employers actively looking for PathFinder-trained interns. Your certifications do the talking — no cold applying.</div>
+    <div class="portal-filters">
+      <button class="filter-btn active" onclick="filterInternships('all',this)">All Opportunities</button>
+      <button class="filter-btn" onclick="filterInternships('finance',this)">Finance</button>
+      <button class="filter-btn" onclick="filterInternships('marketing',this)">Marketing</button>
+      <button class="filter-btn" onclick="filterInternships('tax',this)">Tax & Accounting</button>
+      <button class="filter-btn" onclick="filterInternships('web',this)">Web & Tech</button>
+      <button class="filter-btn" onclick="filterInternships('service',this)">Customer Service</button>
+    </div>
+    <div class="internship-grid" id="internshipGrid">
+
+      <div class="internship-card" data-track="tax">
+        <div class="ic-top">
+          <div class="ic-company">
+            <div class="ic-logo" style="background:rgba(245,166,35,0.15);color:var(--accent)">SK</div>
+            <div><div class="ic-name">Strang Klubnik & Associates</div><div class="ic-location">📍 Middleburg Heights, OH</div></div>
+          </div>
+          <div class="ic-track-badge" style="background:rgba(0,201,167,0.12);color:var(--teal);border:1px solid rgba(0,201,167,0.25)">Tax & Accounting</div>
+        </div>
+        <div class="ic-role">Junior Tax Prep Intern</div>
+        <div class="ic-desc">Work alongside CPAs during tax season. Learn real client filing workflows, bookkeeping, and how a professional accounting firm operates day-to-day.</div>
+        <div class="ic-tags"><span class="ic-tag">QuickBooks</span><span class="ic-tag">Tax Prep</span><span class="ic-tag">Client Work</span><span class="ic-tag">CPA Mentorship</span></div>
+        <div class="ic-footer">
+          <div class="ic-stipend">✓ Beta Partner — Letter of Intent</div>
+          <button class="ic-apply" onclick="applyInternship(this)">Apply Now</button>
+        </div>
+      </div>
+
+      <div class="internship-card" data-track="service">
+        <div class="ic-top">
+          <div class="ic-company">
+            <div class="ic-logo" style="background:rgba(102,126,234,0.15);color:#8b9cf7">OH</div>
+            <div><div class="ic-name">O'Neill Healthcare</div><div class="ic-location">📍 Northeast Ohio</div></div>
+          </div>
+          <div class="ic-track-badge" style="background:rgba(102,126,234,0.12);color:#8b9cf7;border:1px solid rgba(102,126,234,0.25)">Customer Service</div>
+        </div>
+        <div class="ic-role">Patient Services & Admin Intern</div>
+        <div class="ic-desc">Support patient communication, scheduling, and front-desk operations. Build real customer service experience in a healthcare environment.</div>
+        <div class="ic-tags"><span class="ic-tag">Healthcare Admin</span><span class="ic-tag">Communication</span><span class="ic-tag">CRM Basics</span><span class="ic-tag">Scheduling</span></div>
+        <div class="ic-footer">
+          <div class="ic-stipend">✓ Beta Partner — Letter of Intent</div>
+          <button class="ic-apply" onclick="applyInternship(this)">Apply Now</button>
+        </div>
+      </div>
+
+      <div class="internship-card" data-track="service">
+        <div class="ic-top">
+          <div class="ic-company">
+            <div class="ic-logo" style="background:rgba(248,87,166,0.15);color:#f857a6">PP</div>
+            <div><div class="ic-name">Paladin Protective Services</div><div class="ic-location">📍 Greater Cleveland, OH</div></div>
+          </div>
+          <div class="ic-track-badge" style="background:rgba(248,87,166,0.12);color:#f857a6;border:1px solid rgba(248,87,166,0.25)">Sales & Service</div>
+        </div>
+        <div class="ic-role">Business Operations Intern</div>
+        <div class="ic-desc">Support client relations, business development, and internal operations. Get hands-on exposure to running a growing service company.</div>
+        <div class="ic-tags"><span class="ic-tag">Biz Dev</span><span class="ic-tag">Client Relations</span><span class="ic-tag">Operations</span><span class="ic-tag">Sales</span></div>
+        <div class="ic-footer">
+          <div class="ic-stipend">✓ Beta Partner — Letter of Intent</div>
+          <button class="ic-apply" onclick="applyInternship(this)">Apply Now</button>
+        </div>
+      </div>
+
+      <div class="internship-card" data-track="marketing">
+        <div class="ic-top">
+          <div class="ic-company">
+            <div class="ic-logo" style="background:rgba(67,233,123,0.12);color:#43e97b">LS</div>
+            <div><div class="ic-name">Lakeside Supply Company</div><div class="ic-location">📍 Northeast Ohio</div></div>
+          </div>
+          <div class="ic-track-badge" style="background:rgba(67,233,123,0.12);color:#43e97b;border:1px solid rgba(67,233,123,0.25)">Marketing</div>
+        </div>
+        <div class="ic-role">Marketing & Sales Support Intern</div>
+        <div class="ic-desc">Help with social media, product marketing, and sales outreach for a growing supply company. Build a real marketing portfolio.</div>
+        <div class="ic-tags"><span class="ic-tag">Social Media</span><span class="ic-tag">Content Creation</span><span class="ic-tag">Product Marketing</span><span class="ic-tag">Sales Support</span></div>
+        <div class="ic-footer">
+          <div class="ic-stipend">✓ Beta Partner — Letter of Intent</div>
+          <button class="ic-apply" onclick="applyInternship(this)">Apply Now</button>
+        </div>
+      </div>
+
+      <div class="internship-card" data-track="web">
+        <div class="ic-top">
+          <div class="ic-company">
+            <div class="ic-logo" style="background:rgba(79,172,254,0.12);color:#4facfe">GCP</div>
+            <div><div class="ic-name">Greater Cleveland Partnership</div><div class="ic-location">📍 Cleveland, OH</div></div>
+          </div>
+          <div class="ic-track-badge" style="background:rgba(79,172,254,0.12);color:#4facfe;border:1px solid rgba(79,172,254,0.25)">Web & Tech</div>
+        </div>
+        <div class="ic-role">Digital Operations Intern</div>
+        <div class="ic-desc">Support GCP's digital outreach, website maintenance, and data reporting. Work with one of NEO's premier economic development organizations.</div>
+        <div class="ic-tags"><span class="ic-tag">Web Maintenance</span><span class="ic-tag">Data Reporting</span><span class="ic-tag">Digital Outreach</span></div>
+        <div class="ic-footer">
+          <div class="ic-stipend">Partnership Track</div>
+          <button class="ic-apply" onclick="applyInternship(this)">Apply Now</button>
+        </div>
+      </div>
+
+      <div class="internship-card" data-track="finance">
+        <div class="ic-top">
+          <div class="ic-company">
+            <div class="ic-logo" style="background:rgba(245,166,35,0.12);color:var(--accent)">MH</div>
+            <div><div class="ic-name">Middleburg Heights Chamber</div><div class="ic-location">📍 Middleburg Heights, OH</div></div>
+          </div>
+          <div class="ic-track-badge" style="background:rgba(245,166,35,0.12);color:var(--accent);border:1px solid rgba(245,166,35,0.25)">Finance</div>
+        </div>
+        <div class="ic-role">Financial Research & Biz Dev Intern</div>
+        <div class="ic-desc">Support local business financial programs, membership outreach, and economic research. Great exposure to small business finance in action.</div>
+        <div class="ic-tags"><span class="ic-tag">Research</span><span class="ic-tag">Biz Dev</span><span class="ic-tag">Financial Analysis</span></div>
+        <div class="ic-footer">
+          <div class="ic-stipend">Partnership Track</div>
+          <button class="ic-apply" onclick="applyInternship(this)">Apply Now</button>
+        </div>
+      </div>
+
+    </div>
+  </section>
+</div>
+
+<!-- ==================== FINANCE TOOLS ==================== -->
+<div class="page" id="page-tools">
+  <section>
+    <div class="section-label">Financial Literacy Tools</div>
+    <div class="section-title">Learn by Doing</div>
+    <div class="section-sub">Interactive tools built on real financial principles. These are the same concepts taught in PathFinder's Finance & Investment track.</div>
+    <div class="tools-grid">
+
+      <!-- COMPOUND INTEREST -->
+      <div class="tool-card">
+        <div class="tool-title">📈 Compound Interest Calculator</div>
+        <div class="tool-sub">See what your internship earnings could grow into over time.</div>
+        <div class="input-group">
+          <div class="input-label">Starting Amount ($)</div>
+          <input class="tool-input" id="ciPrincipal" type="number" value="1000" oninput="calcCompound()">
+        </div>
+        <div class="input-group">
+          <div class="input-label">Monthly Contribution ($)</div>
+          <input class="tool-input" id="ciMonthly" type="number" value="50" oninput="calcCompound()">
+        </div>
+        <div class="input-group">
+          <div class="input-label">Annual Interest Rate: <span id="ciRateLabel" style="color:var(--accent);font-weight:600">7%</span></div>
+          <input class="tool-input" id="ciRate" type="range" min="1" max="15" value="7" oninput="document.getElementById('ciRateLabel').textContent=this.value+'%';calcCompound()">
+        </div>
+        <div class="input-group">
+          <div class="input-label">Years: <span id="ciYearsLabel" style="color:var(--accent);font-weight:600">10</span></div>
+          <input class="tool-input" id="ciYears" type="range" min="1" max="40" value="10" oninput="document.getElementById('ciYearsLabel').textContent=this.value;calcCompound()">
+        </div>
+        <div class="tool-result">
+          <div class="result-label">Future Value</div>
+          <div class="result-value" id="ciResult">$0</div>
+          <div class="result-sub" id="ciSub">vs. $0 without investing</div>
+        </div>
+      </div>
+
+      <!-- BUDGET BUILDER -->
+      <div class="tool-card">
+        <div class="tool-title">💰 Monthly Budget Builder</div>
+        <div class="tool-sub">Enter your monthly income and see how to allocate it using the 50/30/20 rule.</div>
+        <div class="input-group">
+          <div class="input-label">Monthly Income ($)</div>
+          <input class="tool-input" id="budgetIncome" type="number" value="800" oninput="calcBudget()">
+        </div>
+        <div style="margin-top:1rem">
+          <div class="budget-category">
+            <div class="budget-cat-header"><span>🏠 Needs (50%)</span><span id="budgetNeeds" style="color:var(--teal);font-weight:600">$400</span></div>
+            <div class="budget-bar"><div class="budget-fill" id="budgetNeedsBar" style="width:50%;background:var(--teal)"></div></div>
+          </div>
+          <div class="budget-category">
+            <div class="budget-cat-header"><span>🎮 Wants (30%)</span><span id="budgetWants" style="color:#8b9cf7;font-weight:600">$240</span></div>
+            <div class="budget-bar"><div class="budget-fill" id="budgetWantsBar" style="width:30%;background:#8b9cf7"></div></div>
+          </div>
+          <div class="budget-category">
+            <div class="budget-cat-header"><span>📈 Savings (20%)</span><span id="budgetSavings" style="color:var(--accent);font-weight:600">$160</span></div>
+            <div class="budget-bar"><div class="budget-fill" id="budgetSavingsBar" style="width:20%;background:var(--accent)"></div></div>
+          </div>
+        </div>
+        <div class="input-group" style="margin-top:1.25rem">
+          <div class="input-label">Your Actual Monthly Spending ($)</div>
+          <input class="tool-input" id="budgetSpending" type="number" value="620" oninput="calcBudget()">
+        </div>
+        <div class="budget-summary">
+          <span>Monthly Total: <strong id="budgetSpendingLabel" style="color:var(--white)">$620</strong></span>
+          <span id="budgetStatus" class="budget-left">← $180 left to save!</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+</div>
+
+<!-- ==================== PROGRESS ==================== -->
+<div class="page" id="page-progress">
+  <section>
+    <div class="section-label">My Dashboard</div>
+    <div class="section-title">Track Your Journey</div>
+    <div class="section-sub">Every module you complete earns XP and moves you closer to certification — and your matched internship.</div>
+
+    <div class="progress-section">
+      <div class="progress-header">
+        <div>
+          <div style="font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:700">PathFinder Student Profile</div>
+          <div style="font-size:0.8rem;color:var(--gray);margin-top:2px">Finance & Investment Track · Phase 1</div>
+        </div>
+        <div class="stats-row">
+          <div class="stat-pill"><div class="n" id="xpTotal">0</div><div class="l">Total XP</div></div>
+          <div class="stat-pill"><div class="n" id="modulesComplete">0/6</div><div class="l">Modules</div></div>
+          <div class="stat-pill"><div class="n" id="certProgress">0%</div><div class="l">Cert Progress</div></div>
+        </div>
+      </div>
+
+      <div class="xp-bar-wrap">
+        <div class="xp-label"><span>Level Progress</span><span id="xpLabel">0 / 600 XP to Certification</span></div>
+        <div class="xp-bar"><div class="xp-fill" id="xpFill" style="width:0%"></div></div>
+      </div>
+
+      <div class="progress-grid" id="progressGrid">
+        <div class="progress-module" data-xp="100">
+          <div class="pm-top">
+            <div class="pm-icon">💵</div>
+            <div class="pm-check" onclick="toggleModule(this)">✓</div>
+          </div>
+          <div class="pm-name">Budgeting Basics</div>
+          <div class="pm-sub">Track income, expenses, and build your first budget</div>
+          <div class="pm-xp">+100 XP on completion</div>
+        </div>
+        <div class="progress-module" data-xp="100">
+          <div class="pm-top">
+            <div class="pm-icon">📊</div>
+            <div class="pm-check" onclick="toggleModule(this)">✓</div>
+          </div>
+          <div class="pm-name">Stock Market Fundamentals</div>
+          <div class="pm-sub">How the market works, what stocks are, and how to read them</div>
+          <div class="pm-xp">+100 XP on completion</div>
+        </div>
+        <div class="progress-module" data-xp="100">
+          <div class="pm-top">
+            <div class="pm-icon">📈</div>
+            <div class="pm-check" onclick="toggleModule(this)">✓</div>
+          </div>
+          <div class="pm-name">Compound Interest</div>
+          <div class="pm-sub">The most powerful concept in personal finance</div>
+          <div class="pm-xp">+100 XP on completion</div>
+        </div>
+        <div class="progress-module" data-xp="100">
+          <div class="pm-top">
+            <div class="pm-icon">🧾</div>
+            <div class="pm-check" onclick="toggleModule(this)">✓</div>
+          </div>
+          <div class="pm-name">Financial Statements</div>
+          <div class="pm-sub">Read income statements, balance sheets, and cash flows</div>
+          <div class="pm-xp">+100 XP on completion</div>
+        </div>
+        <div class="progress-module" data-xp="100">
+          <div class="pm-top">
+            <div class="pm-icon">🏦</div>
+            <div class="pm-check" onclick="toggleModule(this)">✓</div>
+          </div>
+          <div class="pm-name">Investment Strategy</div>
+          <div class="pm-sub">ETFs, index funds, diversification, and risk tolerance</div>
+          <div class="pm-xp">+100 XP on completion</div>
+        </div>
+        <div class="progress-module" data-xp="100">
+          <div class="pm-top">
+            <div class="pm-icon">🎯</div>
+            <div class="pm-check" onclick="toggleModule(this)">✓</div>
+          </div>
+          <div class="pm-name">Capstone Project</div>
+          <div class="pm-sub">Build and present a personal financial plan to a CPA mentor</div>
+          <div class="pm-xp">+100 XP + 🎖️ Certification</div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Path<span>Finder</span></div>
+  <p>Pasiak · Logosh · Kuhar · FinMango Barrier Breakers 2026</p>
+  <p style="margin-top:0.5rem">Learn the Skills. Get Certified. Land the Internship. <span style="color:var(--accent)">pathfinder.com</span></p>
+</footer>
+
+<script>
+// ---- PAGE ROUTING ----
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  document.querySelectorAll('nav ul li a').forEach(a => a.classList.remove('active'));
+  const nav = document.getElementById('nav-' + id);
+  if (nav) nav.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ---- TOAST ----
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// ---- AI ADVISOR ----
+const SYSTEM_PROMPT = `You are PathFinder's AI Career Advisor — an enthusiastic, knowledgeable career coach for high school students in Northeast Ohio.
+
+PathFinder is a $199 youth career accelerator with three steps: LEARN (skill tracks), CERTIFY (industry credentials), CONNECT (internship matching).
+
+Available Tracks:
+1. Finance & Investment — Budgeting, stocks, compound interest, financial statements. Certification: PathFinder Finance Cert. Partners: Middleburg Heights Chamber
+2. Digital Marketing — Social media strategy, content, SEO, analytics. Certification: PathFinder Marketing Cert. Partners: Lakeside Supply Company
+3. Tax & Accounting — Tax prep, bookkeeping, QuickBooks. Taught by CPAs. Certification: PathFinder Accounting Cert. Partners: Strang Klubnik & Associates (real CPA firm in Middleburg Heights)
+4. Web Design & Development — HTML/CSS/JS, client projects, portfolio. Certification: PathFinder Tech Cert. Partners: Greater Cleveland Partnership
+5. Public Speaking & Leadership — Presentation, pitch decks, interview prep. Certification: PathFinder Leadership Cert.
+6. Customer Service & Sales — CRM, objection handling, sales funnels. Certification: PathFinder Sales Cert. Partners: O'Neill Healthcare, Paladin Protective Services
+
+NE Ohio Internship Partners (Beta Launch):
+- O'Neill Healthcare: Patient services & admin
+- Paladin Protective Services: Business operations
+- Strang Klubnik & Associates: Junior tax prep (real CPA firm!)
+- Lakeside Supply Company: Marketing & sales support
+- Greater Cleveland Partnership: Digital operations
+- Middleburg Heights Chamber: Financial research
+
+Key Stats: 79% of HS students want internships, only 34% find them. 52% gross margin. $490K revenue by Year 3. 128K students in Cuyahoga County.
+
+Team: Jake Pasiak (CEO, Lean Six Sigma Yellow Belt, Polaris Career Center), Jonah Kuhar (CFO, intern at tax firm), Tim Logosh (CTO).
+
+Be warm, direct, and encouraging. Give specific track recommendations, explain what certifications they'll earn, and name actual internship partners they can work with. Keep responses concise but actionable — 3-5 sentences or short bullet points. Use emojis sparingly. End with one specific action they can take next.`;
+
+async function sendChat() {
+  const input = document.getElementById('chatInput');
+  const msg = input.value.trim();
+  if (!msg) return;
+  addMessage(msg, 'user');
+  input.value = '';
+  const btn = document.getElementById('chatSend');
+  btn.disabled = true;
+  btn.textContent = '...';
+
+  const typing = addMessage('PathFinder AI is thinking...', 'ai');
+
+  try {
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        system: SYSTEM_PROMPT,
+        messages: [{ role: 'user', content: msg }]
+      })
+    });
+    const data = await resp.json();
+    typing.remove();
+    const reply = data.content?.map(b => b.text || '').join('') || 'Sorry, I had trouble connecting. Please try again!';
+    addMessage(reply, 'ai');
+  } catch (e) {
+    typing.remove();
+    addMessage('⚠️ Connection issue — but here\'s the deal: based on your interests, I\'d recommend starting with the Finance & Investment track and connecting with Strang Klubnik & Associates for an internship. Try the full AI advisor when online!', 'ai');
+  }
+
+  btn.disabled = false;
+  btn.textContent = 'Ask AI →';
+}
+
+function addMessage(text, type) {
+  const box = document.getElementById('chatMessages');
+  const el = document.createElement('div');
+  el.className = `msg msg-${type}`;
+  el.textContent = text;
+  box.appendChild(el);
+  box.scrollTop = box.scrollHeight;
+  return el;
+}
+
+function sendQuick(text) {
+  document.getElementById('chatInput').value = text;
+  sendChat();
+}
+
+// ---- TRACKS ----
+function enrollTrack(btn, track) {
+  const card = btn.closest('.track-card');
+  const isEnrolled = card.classList.toggle('enrolled');
+  btn.textContent = isEnrolled ? '✓ Enrolled' : '+ Enroll in This Track';
+  if (isEnrolled) showToast('🎉 Enrolled in track! Check My Progress.');
+}
+
+// ---- INTERNSHIP FILTER ----
+function filterInternships(track, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.internship-card').forEach(card => {
+    card.style.display = (track === 'all' || card.dataset.track === track) ? 'block' : 'none';
+  });
+}
+
+function applyInternship(btn) {
+  if (btn.classList.contains('ic-applied')) return;
+  btn.classList.add('ic-applied');
+  btn.textContent = '✓ Applied!';
+  showToast('🚀 Application submitted! Employer will review your profile.');
+}
+
+// ---- COMPOUND INTEREST ----
+function calcCompound() {
+  const P = parseFloat(document.getElementById('ciPrincipal').value) || 0;
+  const m = parseFloat(document.getElementById('ciMonthly').value) || 0;
+  const r = parseFloat(document.getElementById('ciRate').value) / 100 / 12;
+  const n = parseFloat(document.getElementById('ciYears').value) * 12;
+
+  const future = P * Math.pow(1 + r, n) + m * ((Math.pow(1 + r, n) - 1) / r);
+  const noInvest = P + m * n;
+
+  document.getElementById('ciResult').textContent = '$' + Math.round(future).toLocaleString();
+  document.getElementById('ciSub').textContent = `vs. $${Math.round(noInvest).toLocaleString()} without investing — $${Math.round(future - noInvest).toLocaleString()} in compound growth!`;
+}
+
+// ---- BUDGET ----
+function calcBudget() {
+  const income = parseFloat(document.getElementById('budgetIncome').value) || 0;
+  const spending = parseFloat(document.getElementById('budgetSpending').value) || 0;
+  const needs = income * 0.5;
+  const wants = income * 0.3;
+  const savings = income * 0.2;
+
+  document.getElementById('budgetNeeds').textContent = '$' + Math.round(needs).toLocaleString();
+  document.getElementById('budgetWants').textContent = '$' + Math.round(wants).toLocaleString();
+  document.getElementById('budgetSavings').textContent = '$' + Math.round(savings).toLocaleString();
+  document.getElementById('budgetSpendingLabel').textContent = '$' + Math.round(spending).toLocaleString();
+
+  const diff = income - spending;
+  const statusEl = document.getElementById('budgetStatus');
+  if (diff >= 0) {
+    statusEl.textContent = `← $${Math.round(diff).toLocaleString()} left to save!`;
+    statusEl.className = 'budget-left';
+  } else {
+    statusEl.textContent = `⚠️ $${Math.round(Math.abs(diff)).toLocaleString()} over budget`;
+    statusEl.className = 'budget-over';
+  }
+}
+
+// ---- PROGRESS TRACKER ----
+function toggleModule(checkEl) {
+  const module = checkEl.closest('.progress-module');
+  const done = module.classList.toggle('done');
+  updateXP();
+}
+
+function updateXP() {
+  const modules = document.querySelectorAll('.progress-module');
+  let totalXP = 0;
+  let completed = 0;
+  modules.forEach(m => {
+    if (m.classList.contains('done')) {
+      totalXP += parseInt(m.dataset.xp || 100);
+      completed++;
+    }
+  });
+  const total = modules.length;
+  const pct = Math.round((completed / total) * 100);
+
+  document.getElementById('xpTotal').textContent = totalXP;
+  document.getElementById('modulesComplete').textContent = `${completed}/${total}`;
+  document.getElementById('certProgress').textContent = pct + '%';
+  document.getElementById('xpFill').style.width = pct + '%';
+  document.getElementById('xpLabel').textContent = `${totalXP} / 600 XP to Certification`;
+
+  if (completed === total) showToast('🎖️ Certification Unlocked! You\'re ready for an internship!');
+}
+
+// ---- INIT ----
+calcCompound();
+calcBudget();
+</script>
+</body>
+</html>
